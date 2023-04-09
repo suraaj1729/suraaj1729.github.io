@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Machine Learning Results</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .column {
+            flex: 1;
+            padding: 20px;
+        }
+
+        #results {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        #results select {
+            font-size: 16px;
+            padding: 10px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        #results table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        #results th,
+        #results td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #results th {
+            background-color: #333;
+            color: white;
+        }
+
+        #plots-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .plot {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .plot h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Machine Learning Results</h1>
+    </header>
+    <div class="container">
+        <div class="column">
+            <div id="results">
+                <label for="algorithm">Select an algorithm:</label>
+                <select id="algorithm" onchange="displayResults()">
+                    <option value="">--Select Algorithm--</option>
+                    <option value="random-forest">Random Forest</option>
+                    <option value="svm">Support Vector Machine</option>
+                    <option value="knn">K-Nearest Neighbors</option>
+                    <option value="naive-bayes">Naive Bayes</option>
+                    <option value="logistic-regression">logistic regression</option>
+                </select>
+                <table id="results-table">
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="plots-container"></div>
+    <script>
+        const results = {
+            'random-forest': {
+                'Accuracy': 99.76,
+                'Precision': 99.96,
+                'Recall': 99.54,
+                'F1 Score': 99.75,
+                'Confusion Matrix': '[[8804  3]\n [ 39 8382]]'
+            },
+            'svm': {
+                'Accuracy': 98.40,
+                'Precision': 99.14,
+                'Recall': 97.57,
+                'F1 Score': 98.35,
+                'Confusion Matrix': '[[8736 71]\n [ 205 8216]]'
+            },
+            'knn': {
+                'Accuracy': 99.34,
+                'Precision': 99.55,
+                'Recall': 99.10,
+                'F1 Score': 99.32,
+                'Confusion Matrix': '[[8769 38]\n [ 76 8345]]'
+            },
+            'naive-bayes': {
+                'Accuracy': 76.07,
+                'Precision': 92.95,
+                'Recall': 54.63,
+                'F1 Score': 68.82,
+                'Confusion Matrix': '[[5133 207]\n [2267 2730]]'
+            },
+            'logistic-regression': {
+                'Accuracy': 93.19,
+                'Precision': 96.93,
+                'Recall': 88.88,
+                'F1 Score': 92.73,
+                'Confusion Matrix': '[[8570 237]\n [ 936 7485]]'
+            }
+        };
+
+        function displayResults() {
+            const algorithm = document.getElementById('algorithm').value;
+            const resultsTable = document.getElementById('results-table');
+            const plotsContainer = document.getElementById('plots-container');
+
+            // Clear the previous results and plots
+            resultsTable.innerHTML = '<tr><th>Metric</th><th>Value</th></tr>';
+            plotsContainer.innerHTML = '';
+
+            // Display the results for the selected algorithm
+            if (algorithm) {
+                for (const metric in results[algorithm]) {
+                    if (metric === 'Confusion Matrix') {
+                        resultsTable.innerHTML += `<tr><td>${metric}</td><td><pre>${results[algorithm][metric]}</pre></td></tr>`;
+                    } else {
+                        resultsTable.innerHTML += `<tr><td>${metric}</td><td>${results[algorithm][metric]}</td></tr>`;
+                    }
+                }
+
+                const plot3 = document.createElement('div');
+                plot3.classList.add('plot');
+                plot3.innerHTML = `
+              <h2>Confusion matrix</h2>
+              <img src="${algorithm}_plot3.png" alt="${algorithm} Plot 3">
+            `;
+                plotsContainer.appendChild(plot3);
+
+                // Display the plots for the selected algorithm
+                const plot1 = document.createElement('div');
+                plot1.classList.add('plot');
+                plot1.innerHTML = `
+              <h2>evatuation metrics</h2>
+              <img src="${algorithm}_plot1.png" alt="${algorithm} Plot 1">
+            `;
+                plotsContainer.appendChild(plot1);
+
+                const plot2 = document.createElement('div');
+                plot2.classList.add('plot');
+                plot2.innerHTML = `
+              <h2>3D plot</h2>
+              <img src="${algorithm}_plot2.png" alt="${algorithm} Plot 2">
+            `;
+                plotsContainer.appendChild(plot2);
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
